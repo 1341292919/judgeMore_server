@@ -1,5 +1,5 @@
 namespace go api.material
-include "./model.thrift"
+include "../model.thrift"
 
 
 service MaterialService {

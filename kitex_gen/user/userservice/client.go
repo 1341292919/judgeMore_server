@@ -3,11 +3,20 @@
 package userservice
 
 import (
+	"context"
 	client "github.com/cloudwego/kitex/client"
+	callopt "github.com/cloudwego/kitex/client/callopt"
+	user "judgeMore_server/kitex_gen/user"
 )
 
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.
 type Client interface {
+	Register(ctx context.Context, req *user.RegisterRequest, callOptions ...callopt.Option) (r *user.RegisterResponse, err error)
+	Login(ctx context.Context, req *user.LoginRequest, callOptions ...callopt.Option) (r *user.LoginResponse, err error)
+	Logout(ctx context.Context, req *user.LogoutReq, callOptions ...callopt.Option) (r *user.LogoutResp, err error)
+	QueryUserInfo(ctx context.Context, req *user.QueryUserInfoRequest, callOptions ...callopt.Option) (r *user.QueryUserInfoResponse, err error)
+	VerifyEmail(ctx context.Context, req *user.VerifyEmailRequest, callOptions ...callopt.Option) (r *user.VerifyEmailResponse, err error)
+	UpdateUserInfo(ctx context.Context, req *user.UpdateUserInfoRequest, callOptions ...callopt.Option) (r *user.UpdateUserInfoResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -37,4 +46,34 @@ func MustNewClient(destService string, opts ...client.Option) Client {
 
 type kUserServiceClient struct {
 	*kClient
+}
+
+func (p *kUserServiceClient) Register(ctx context.Context, req *user.RegisterRequest, callOptions ...callopt.Option) (r *user.RegisterResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.Register(ctx, req)
+}
+
+func (p *kUserServiceClient) Login(ctx context.Context, req *user.LoginRequest, callOptions ...callopt.Option) (r *user.LoginResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.Login(ctx, req)
+}
+
+func (p *kUserServiceClient) Logout(ctx context.Context, req *user.LogoutReq, callOptions ...callopt.Option) (r *user.LogoutResp, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.Logout(ctx, req)
+}
+
+func (p *kUserServiceClient) QueryUserInfo(ctx context.Context, req *user.QueryUserInfoRequest, callOptions ...callopt.Option) (r *user.QueryUserInfoResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.QueryUserInfo(ctx, req)
+}
+
+func (p *kUserServiceClient) VerifyEmail(ctx context.Context, req *user.VerifyEmailRequest, callOptions ...callopt.Option) (r *user.VerifyEmailResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.VerifyEmail(ctx, req)
+}
+
+func (p *kUserServiceClient) UpdateUserInfo(ctx context.Context, req *user.UpdateUserInfoRequest, callOptions ...callopt.Option) (r *user.UpdateUserInfoResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.UpdateUserInfo(ctx, req)
 }

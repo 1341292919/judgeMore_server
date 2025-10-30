@@ -74,3 +74,166 @@ var fieldIDToName_BaseResp = map[int16]string{
 	1: "code",
 	2: "msg",
 }
+
+type UserInfo struct {
+	Username string `thrift:"username,1" frugal:"1,default,string" json:"username"`
+	UserId   int64  `thrift:"userId,2" frugal:"2,default,i64" json:"userId"`
+	Major    string `thrift:"Major,4" frugal:"4,default,string" json:"Major"`
+	College  string `thrift:"college,5" frugal:"5,default,string" json:"college"`
+	Grade    string `thrift:"grade,6" frugal:"6,default,string" json:"grade"`
+	Email    string `thrift:"email,7" frugal:"7,default,string" json:"email"`
+	Role     string `thrift:"role,8" frugal:"8,default,string" json:"role"`
+}
+
+func NewUserInfo() *UserInfo {
+	return &UserInfo{}
+}
+
+func (p *UserInfo) InitDefault() {
+}
+
+func (p *UserInfo) GetUsername() (v string) {
+	return p.Username
+}
+
+func (p *UserInfo) GetUserId() (v int64) {
+	return p.UserId
+}
+
+func (p *UserInfo) GetMajor() (v string) {
+	return p.Major
+}
+
+func (p *UserInfo) GetCollege() (v string) {
+	return p.College
+}
+
+func (p *UserInfo) GetGrade() (v string) {
+	return p.Grade
+}
+
+func (p *UserInfo) GetEmail() (v string) {
+	return p.Email
+}
+
+func (p *UserInfo) GetRole() (v string) {
+	return p.Role
+}
+func (p *UserInfo) SetUsername(val string) {
+	p.Username = val
+}
+func (p *UserInfo) SetUserId(val int64) {
+	p.UserId = val
+}
+func (p *UserInfo) SetMajor(val string) {
+	p.Major = val
+}
+func (p *UserInfo) SetCollege(val string) {
+	p.College = val
+}
+func (p *UserInfo) SetGrade(val string) {
+	p.Grade = val
+}
+func (p *UserInfo) SetEmail(val string) {
+	p.Email = val
+}
+func (p *UserInfo) SetRole(val string) {
+	p.Role = val
+}
+
+func (p *UserInfo) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("UserInfo(%+v)", *p)
+}
+
+func (p *UserInfo) DeepEqual(ano *UserInfo) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Username) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.UserId) {
+		return false
+	}
+	if !p.Field4DeepEqual(ano.Major) {
+		return false
+	}
+	if !p.Field5DeepEqual(ano.College) {
+		return false
+	}
+	if !p.Field6DeepEqual(ano.Grade) {
+		return false
+	}
+	if !p.Field7DeepEqual(ano.Email) {
+		return false
+	}
+	if !p.Field8DeepEqual(ano.Role) {
+		return false
+	}
+	return true
+}
+
+func (p *UserInfo) Field1DeepEqual(src string) bool {
+
+	if strings.Compare(p.Username, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UserInfo) Field2DeepEqual(src int64) bool {
+
+	if p.UserId != src {
+		return false
+	}
+	return true
+}
+func (p *UserInfo) Field4DeepEqual(src string) bool {
+
+	if strings.Compare(p.Major, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UserInfo) Field5DeepEqual(src string) bool {
+
+	if strings.Compare(p.College, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UserInfo) Field6DeepEqual(src string) bool {
+
+	if strings.Compare(p.Grade, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UserInfo) Field7DeepEqual(src string) bool {
+
+	if strings.Compare(p.Email, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UserInfo) Field8DeepEqual(src string) bool {
+
+	if strings.Compare(p.Role, src) != 0 {
+		return false
+	}
+	return true
+}
+
+var fieldIDToName_UserInfo = map[int16]string{
+	1: "username",
+	2: "userId",
+	4: "Major",
+	5: "college",
+	6: "grade",
+	7: "email",
+	8: "role",
+}

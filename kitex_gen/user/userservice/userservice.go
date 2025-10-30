@@ -3,6 +3,7 @@
 package userservice
 
 import (
+	"context"
 	"errors"
 	client "github.com/cloudwego/kitex/client"
 	kitex "github.com/cloudwego/kitex/pkg/serviceinfo"
@@ -11,7 +12,50 @@ import (
 
 var errInvalidMessageType = errors.New("invalid message type for service method handler")
 
-var serviceMethods = map[string]kitex.MethodInfo{}
+var serviceMethods = map[string]kitex.MethodInfo{
+	"Register": kitex.NewMethodInfo(
+		registerHandler,
+		newUserServiceRegisterArgs,
+		newUserServiceRegisterResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"Login": kitex.NewMethodInfo(
+		loginHandler,
+		newUserServiceLoginArgs,
+		newUserServiceLoginResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"Logout": kitex.NewMethodInfo(
+		logoutHandler,
+		newUserServiceLogoutArgs,
+		newUserServiceLogoutResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"QueryUserInfo": kitex.NewMethodInfo(
+		queryUserInfoHandler,
+		newUserServiceQueryUserInfoArgs,
+		newUserServiceQueryUserInfoResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"VerifyEmail": kitex.NewMethodInfo(
+		verifyEmailHandler,
+		newUserServiceVerifyEmailArgs,
+		newUserServiceVerifyEmailResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"UpdateUserInfo": kitex.NewMethodInfo(
+		updateUserInfoHandler,
+		newUserServiceUpdateUserInfoArgs,
+		newUserServiceUpdateUserInfoResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+}
 
 var (
 	userServiceServiceInfo                = NewServiceInfo()
@@ -77,6 +121,114 @@ func newServiceInfo(hasStreaming bool, keepStreamingMethods bool, keepNonStreami
 	return svcInfo
 }
 
+func registerHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.UserServiceRegisterArgs)
+	realResult := result.(*user.UserServiceRegisterResult)
+	success, err := handler.(user.UserService).Register(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserServiceRegisterArgs() interface{} {
+	return user.NewUserServiceRegisterArgs()
+}
+
+func newUserServiceRegisterResult() interface{} {
+	return user.NewUserServiceRegisterResult()
+}
+
+func loginHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.UserServiceLoginArgs)
+	realResult := result.(*user.UserServiceLoginResult)
+	success, err := handler.(user.UserService).Login(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserServiceLoginArgs() interface{} {
+	return user.NewUserServiceLoginArgs()
+}
+
+func newUserServiceLoginResult() interface{} {
+	return user.NewUserServiceLoginResult()
+}
+
+func logoutHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.UserServiceLogoutArgs)
+	realResult := result.(*user.UserServiceLogoutResult)
+	success, err := handler.(user.UserService).Logout(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserServiceLogoutArgs() interface{} {
+	return user.NewUserServiceLogoutArgs()
+}
+
+func newUserServiceLogoutResult() interface{} {
+	return user.NewUserServiceLogoutResult()
+}
+
+func queryUserInfoHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.UserServiceQueryUserInfoArgs)
+	realResult := result.(*user.UserServiceQueryUserInfoResult)
+	success, err := handler.(user.UserService).QueryUserInfo(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserServiceQueryUserInfoArgs() interface{} {
+	return user.NewUserServiceQueryUserInfoArgs()
+}
+
+func newUserServiceQueryUserInfoResult() interface{} {
+	return user.NewUserServiceQueryUserInfoResult()
+}
+
+func verifyEmailHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.UserServiceVerifyEmailArgs)
+	realResult := result.(*user.UserServiceVerifyEmailResult)
+	success, err := handler.(user.UserService).VerifyEmail(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserServiceVerifyEmailArgs() interface{} {
+	return user.NewUserServiceVerifyEmailArgs()
+}
+
+func newUserServiceVerifyEmailResult() interface{} {
+	return user.NewUserServiceVerifyEmailResult()
+}
+
+func updateUserInfoHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.UserServiceUpdateUserInfoArgs)
+	realResult := result.(*user.UserServiceUpdateUserInfoResult)
+	success, err := handler.(user.UserService).UpdateUserInfo(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserServiceUpdateUserInfoArgs() interface{} {
+	return user.NewUserServiceUpdateUserInfoArgs()
+}
+
+func newUserServiceUpdateUserInfoResult() interface{} {
+	return user.NewUserServiceUpdateUserInfoResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -85,4 +237,64 @@ func newServiceClient(c client.Client) *kClient {
 	return &kClient{
 		c: c,
 	}
+}
+
+func (p *kClient) Register(ctx context.Context, req *user.RegisterRequest) (r *user.RegisterResponse, err error) {
+	var _args user.UserServiceRegisterArgs
+	_args.Req = req
+	var _result user.UserServiceRegisterResult
+	if err = p.c.Call(ctx, "Register", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) Login(ctx context.Context, req *user.LoginRequest) (r *user.LoginResponse, err error) {
+	var _args user.UserServiceLoginArgs
+	_args.Req = req
+	var _result user.UserServiceLoginResult
+	if err = p.c.Call(ctx, "Login", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) Logout(ctx context.Context, req *user.LogoutReq) (r *user.LogoutResp, err error) {
+	var _args user.UserServiceLogoutArgs
+	_args.Req = req
+	var _result user.UserServiceLogoutResult
+	if err = p.c.Call(ctx, "Logout", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) QueryUserInfo(ctx context.Context, req *user.QueryUserInfoRequest) (r *user.QueryUserInfoResponse, err error) {
+	var _args user.UserServiceQueryUserInfoArgs
+	_args.Req = req
+	var _result user.UserServiceQueryUserInfoResult
+	if err = p.c.Call(ctx, "QueryUserInfo", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) VerifyEmail(ctx context.Context, req *user.VerifyEmailRequest) (r *user.VerifyEmailResponse, err error) {
+	var _args user.UserServiceVerifyEmailArgs
+	_args.Req = req
+	var _result user.UserServiceVerifyEmailResult
+	if err = p.c.Call(ctx, "VerifyEmail", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) UpdateUserInfo(ctx context.Context, req *user.UpdateUserInfoRequest) (r *user.UpdateUserInfoResponse, err error) {
+	var _args user.UserServiceUpdateUserInfoArgs
+	_args.Req = req
+	var _result user.UserServiceUpdateUserInfoResult
+	if err = p.c.Call(ctx, "UpdateUserInfo", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
 }

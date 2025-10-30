@@ -1,5 +1,5 @@
 namespace go api.maintain
-include "./model.thrift"
+include "../model.thrift"
 
 
 service MaintainService {

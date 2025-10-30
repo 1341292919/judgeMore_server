@@ -1,0 +1,27 @@
+mysql:
+  addr: 0.0.0.0:3306
+  database: judgeMore
+  username: judgeMore
+  password: judgeMore
+  charset: utf8mb4
+
+etcd:
+  addr: 127.0.0.1:2379
+
+redis:
+  addr: 127.0.0.1:6379
+  username: "default"
+  password: "judgeMore"
+
+services:
+  gateway:
+    name : gateway
+    load-balance: true
+    addr:
+      - 0.0.0.0:9999
+      - 127.0.0.1:10001
+  user:
+    name: user
+    load-balance: false
+    addr:
+      - 0.0.0.0:10002

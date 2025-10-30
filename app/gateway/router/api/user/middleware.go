@@ -5,3 +5,58 @@ package user
 import (
 	"github.com/cloudwego/hertz/pkg/app"
 )
+
+func rootMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _apiMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _authMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _verifyMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _loginMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _logoutMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _registerMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _usersMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _queryuserinfoMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _updateuserinfoMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _verifyemailMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

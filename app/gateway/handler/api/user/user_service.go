@@ -4,7 +4,168 @@ package user
 
 import (
 	"context"
+	api "judgeMore_server/app/gateway/model/api/user"
+	"judgeMore_server/app/gateway/pack"
+	"judgeMore_server/app/gateway/rpc"
+	"judgeMore_server/app/gateway/service"
+	"judgeMore_server/kitex_gen/user"
+	"judgeMore_server/pkg/constants"
+	"judgeMore_server/pkg/errno"
+	"judgeMore_server/pkg/utils"
 
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
+
+// Register .
+// @router /api/auth/register [POST]
+func Register(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.RegisterRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		pack.SendFailResponse(c, errno.NewErrNo(errno.ParamMissingErrorCode, "param missing:"+err.Error()))
+		return
+	}
+
+	resp, err := rpc.RegisterRPC(ctx, &user.RegisterRequest{
+		Username: req.Username,
+		Password: req.Password,
+		Email:    req.Email,
+	})
+
+	if err != nil {
+		pack.SendFailResponse(c, errno.ConvertErr(err))
+		return
+	}
+	resp.Base = pack.BuildBaseResp(errno.Success)
+	pack.SendResponse(c, resp)
+}
+
+// Login .
+// @router /api/auth/login [POST]
+func Login(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.LoginRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		pack.SendFailResponse(c, errno.NewErrNo(errno.ParamMissingErrorCode, "param missing:"+err.Error()))
+		return
+	}
+
+	resp, err := rpc.LoginRPC(ctx, &user.LoginRequest{
+		Username: req.Username,
+		Password: req.Password,
+	})
+	if err != nil {
+		pack.SendFailResponse(c, errno.ConvertErr(err))
+		return
+	}
+	accessToken, refreshToken, err := utils.CreateAllToken(resp.Data.UserId)
+
+	if err != nil {
+		pack.SendFailResponse(c, errno.ConvertErr(err))
+		return
+	}
+
+	c.Header(constants.AccessTokenHeader, accessToken)
+	c.Header(constants.RefreshTokenHeader, refreshToken)
+
+	resp.Base = pack.BuildBaseResp(errno.Success)
+	pack.SendResponse(c, resp)
+}
+
+// Logout .
+// @router /api/auth/logout [POST]
+func Logout(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.LogoutReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		pack.SendFailResponse(c, errno.NewErrNo(errno.ParamMissingErrorCode, "param missing:"+err.Error()))
+		return
+	}
+
+	resp := rpc.LogoutRPC(ctx, &user.LogoutReq{})
+
+	if err != nil {
+		pack.SendFailResponse(c, errno.ConvertErr(err))
+		return
+	}
+	pack.SendResponse(c, resp)
+}
+
+// QueryUserInfo .
+// @router /api/users/ [GET]
+func QueryUserInfo(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.QueryUserInfoRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		pack.SendFailResponse(c, errno.NewErrNo(errno.ParamMissingErrorCode, "param missing:"+err.Error()))
+		return
+	}
+
+	resp, err := rpc.QueryUserInfoRpc(ctx, &user.QueryUserInfoRequest{
+		UserId: req.UserId,
+	})
+
+	if err != nil {
+		pack.SendFailResponse(c, errno.ConvertErr(err))
+		return
+	}
+	resp.Base = pack.BuildBaseResp(errno.Success)
+	pack.SendResponse(c, resp)
+}
+
+// UpdateUserInfo .
+// @router /api/users/me [PUT]
+func UpdateUserInfo(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.UpdateUserInfoRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		pack.SendFailResponse(c, errno.NewErrNo(errno.ParamMissingErrorCode, "param missing:"+err.Error()))
+		return
+	}
+
+	var resp api.UpdateUserInfoResponse
+	userId := service.GetUserIDFromContext(c)
+	err = rpc.UpdateUserInfoRpc(ctx, &user.UpdateUserInfoRequest{
+		College: req.College,
+		Major:   req.Major,
+		Grade:   req.Grade,
+		Id:      userId,
+	})
+	if err != nil {
+		pack.SendFailResponse(c, errno.ConvertErr(err))
+		return
+	}
+	resp.Base = pack.BuildBaseResp(errno.Success)
+	pack.SendResponse(c, resp)
+}
+
+// VerifyEmail .
+// @router /api/auth/email [POST]
+func VerifyEmail(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.VerifyEmailRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		pack.SendFailResponse(c, errno.NewErrNo(errno.ParamMissingErrorCode, "param missing:"+err.Error()))
+		return
+	}
+
+	resp := new(api.VerifyEmailResponse)
+	userId := service.GetUserIDFromContext(c)
+	err = rpc.VerifyEmailRpc(ctx, &user.VerifyEmailRequest{
+		Email: req.Email,
+		Code:  req.Code,
+		Id:    userId,
+	})
+	if err != nil {
+		pack.SendFailResponse(c, errno.ConvertErr(err))
+		return
+	}
+	resp.Base = pack.BuildBaseResp(errno.Success)
+	pack.SendResponse(c, resp)
+}

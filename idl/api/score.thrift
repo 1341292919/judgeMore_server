@@ -1,5 +1,5 @@
 namespace go api.score
-include "./model.thrift"
+include "../model.thrift"
 
 
 service ScoreService {

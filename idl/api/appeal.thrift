@@ -1,5 +1,5 @@
 namespace go api.appeal
-include "./model.thrift"
+include "../model.thrift"
 
 service AppealService {
 
