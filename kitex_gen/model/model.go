@@ -76,13 +76,16 @@ var fieldIDToName_BaseResp = map[int16]string{
 }
 
 type UserInfo struct {
-	Username string `thrift:"username,1" frugal:"1,default,string" json:"username"`
-	UserId   int64  `thrift:"userId,2" frugal:"2,default,i64" json:"userId"`
-	Major    string `thrift:"Major,4" frugal:"4,default,string" json:"Major"`
-	College  string `thrift:"college,5" frugal:"5,default,string" json:"college"`
-	Grade    string `thrift:"grade,6" frugal:"6,default,string" json:"grade"`
-	Email    string `thrift:"email,7" frugal:"7,default,string" json:"email"`
-	Role     string `thrift:"role,8" frugal:"8,default,string" json:"role"`
+	Username  string `thrift:"username,1" frugal:"1,default,string" json:"username"`
+	UserId    string `thrift:"userId,2" frugal:"2,default,string" json:"userId"`
+	Major     string `thrift:"Major,4" frugal:"4,default,string" json:"Major"`
+	College   string `thrift:"college,5" frugal:"5,default,string" json:"college"`
+	Grade     string `thrift:"grade,6" frugal:"6,default,string" json:"grade"`
+	Email     string `thrift:"email,7" frugal:"7,default,string" json:"email"`
+	Role      string `thrift:"role,8" frugal:"8,default,string" json:"role"`
+	CreatedAt string `thrift:"created_at,9,required" frugal:"9,required,string" json:"created_at"`
+	UpdatedAt string `thrift:"updated_at,10,required" frugal:"10,required,string" json:"updated_at"`
+	DeletedAt string `thrift:"deleted_at,11,required" frugal:"11,required,string" json:"deleted_at"`
 }
 
 func NewUserInfo() *UserInfo {
@@ -96,7 +99,7 @@ func (p *UserInfo) GetUsername() (v string) {
 	return p.Username
 }
 
-func (p *UserInfo) GetUserId() (v int64) {
+func (p *UserInfo) GetUserId() (v string) {
 	return p.UserId
 }
 
@@ -119,10 +122,22 @@ func (p *UserInfo) GetEmail() (v string) {
 func (p *UserInfo) GetRole() (v string) {
 	return p.Role
 }
+
+func (p *UserInfo) GetCreatedAt() (v string) {
+	return p.CreatedAt
+}
+
+func (p *UserInfo) GetUpdatedAt() (v string) {
+	return p.UpdatedAt
+}
+
+func (p *UserInfo) GetDeletedAt() (v string) {
+	return p.DeletedAt
+}
 func (p *UserInfo) SetUsername(val string) {
 	p.Username = val
 }
-func (p *UserInfo) SetUserId(val int64) {
+func (p *UserInfo) SetUserId(val string) {
 	p.UserId = val
 }
 func (p *UserInfo) SetMajor(val string) {
@@ -139,6 +154,15 @@ func (p *UserInfo) SetEmail(val string) {
 }
 func (p *UserInfo) SetRole(val string) {
 	p.Role = val
+}
+func (p *UserInfo) SetCreatedAt(val string) {
+	p.CreatedAt = val
+}
+func (p *UserInfo) SetUpdatedAt(val string) {
+	p.UpdatedAt = val
+}
+func (p *UserInfo) SetDeletedAt(val string) {
+	p.DeletedAt = val
 }
 
 func (p *UserInfo) String() string {
@@ -175,6 +199,15 @@ func (p *UserInfo) DeepEqual(ano *UserInfo) bool {
 	if !p.Field8DeepEqual(ano.Role) {
 		return false
 	}
+	if !p.Field9DeepEqual(ano.CreatedAt) {
+		return false
+	}
+	if !p.Field10DeepEqual(ano.UpdatedAt) {
+		return false
+	}
+	if !p.Field11DeepEqual(ano.DeletedAt) {
+		return false
+	}
 	return true
 }
 
@@ -185,9 +218,9 @@ func (p *UserInfo) Field1DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *UserInfo) Field2DeepEqual(src int64) bool {
+func (p *UserInfo) Field2DeepEqual(src string) bool {
 
-	if p.UserId != src {
+	if strings.Compare(p.UserId, src) != 0 {
 		return false
 	}
 	return true
@@ -227,13 +260,37 @@ func (p *UserInfo) Field8DeepEqual(src string) bool {
 	}
 	return true
 }
+func (p *UserInfo) Field9DeepEqual(src string) bool {
+
+	if strings.Compare(p.CreatedAt, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UserInfo) Field10DeepEqual(src string) bool {
+
+	if strings.Compare(p.UpdatedAt, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UserInfo) Field11DeepEqual(src string) bool {
+
+	if strings.Compare(p.DeletedAt, src) != 0 {
+		return false
+	}
+	return true
+}
 
 var fieldIDToName_UserInfo = map[int16]string{
-	1: "username",
-	2: "userId",
-	4: "Major",
-	5: "college",
-	6: "grade",
-	7: "email",
-	8: "role",
+	1:  "username",
+	2:  "userId",
+	4:  "Major",
+	5:  "college",
+	6:  "grade",
+	7:  "email",
+	8:  "role",
+	9:  "created_at",
+	10: "updated_at",
+	11: "deleted_at",
 }

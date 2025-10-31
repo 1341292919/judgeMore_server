@@ -4,6 +4,7 @@ package user
 
 import (
 	"github.com/cloudwego/hertz/pkg/app"
+	"judgeMore_server/app/gateway/router/api/auth"
 )
 
 func rootMw() []app.HandlerFunc {
@@ -17,11 +18,6 @@ func _apiMw() []app.HandlerFunc {
 }
 
 func _authMw() []app.HandlerFunc {
-	// your code...
-	return nil
-}
-
-func _verifyMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
@@ -48,12 +44,12 @@ func _usersMw() []app.HandlerFunc {
 
 func _queryuserinfoMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return auth.Auth()
 }
 
 func _updateuserinfoMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return auth.Auth()
 }
 
 func _verifyemailMw() []app.HandlerFunc {

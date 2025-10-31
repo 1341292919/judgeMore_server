@@ -13,7 +13,7 @@ type RegisterRequest struct {
 	Username string `thrift:"username,1,required" frugal:"1,required,string" json:"username"`
 	Password string `thrift:"password,2,required" frugal:"2,required,string" json:"password"`
 	Email    string `thrift:"email,3,required" frugal:"3,required,string" json:"email"`
-	Id       int64  `thrift:"Id,4,required" frugal:"4,required,i64" json:"Id"`
+	Id       string `thrift:"Id,4,required" frugal:"4,required,string" json:"Id"`
 }
 
 func NewRegisterRequest() *RegisterRequest {
@@ -35,7 +35,7 @@ func (p *RegisterRequest) GetEmail() (v string) {
 	return p.Email
 }
 
-func (p *RegisterRequest) GetId() (v int64) {
+func (p *RegisterRequest) GetId() (v string) {
 	return p.Id
 }
 func (p *RegisterRequest) SetUsername(val string) {
@@ -47,7 +47,7 @@ func (p *RegisterRequest) SetPassword(val string) {
 func (p *RegisterRequest) SetEmail(val string) {
 	p.Email = val
 }
-func (p *RegisterRequest) SetId(val int64) {
+func (p *RegisterRequest) SetId(val string) {
 	p.Id = val
 }
 
@@ -100,9 +100,9 @@ func (p *RegisterRequest) Field3DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *RegisterRequest) Field4DeepEqual(src int64) bool {
+func (p *RegisterRequest) Field4DeepEqual(src string) bool {
 
-	if p.Id != src {
+	if strings.Compare(p.Id, src) != 0 {
 		return false
 	}
 	return true
@@ -117,7 +117,7 @@ var fieldIDToName_RegisterRequest = map[int16]string{
 
 type RegisterResponse struct {
 	Base   *model.BaseResp `thrift:"base,1" frugal:"1,default,model.BaseResp" json:"base"`
-	UserId *int64          `thrift:"UserId,2,optional" frugal:"2,optional,i64" json:"UserId,omitempty"`
+	UserId *string         `thrift:"UserId,2,optional" frugal:"2,optional,string" json:"UserId,omitempty"`
 }
 
 func NewRegisterResponse() *RegisterResponse {
@@ -136,9 +136,9 @@ func (p *RegisterResponse) GetBase() (v *model.BaseResp) {
 	return p.Base
 }
 
-var RegisterResponse_UserId_DEFAULT int64
+var RegisterResponse_UserId_DEFAULT string
 
-func (p *RegisterResponse) GetUserId() (v int64) {
+func (p *RegisterResponse) GetUserId() (v string) {
 	if !p.IsSetUserId() {
 		return RegisterResponse_UserId_DEFAULT
 	}
@@ -147,7 +147,7 @@ func (p *RegisterResponse) GetUserId() (v int64) {
 func (p *RegisterResponse) SetBase(val *model.BaseResp) {
 	p.Base = val
 }
-func (p *RegisterResponse) SetUserId(val *int64) {
+func (p *RegisterResponse) SetUserId(val *string) {
 	p.UserId = val
 }
 
@@ -188,14 +188,14 @@ func (p *RegisterResponse) Field1DeepEqual(src *model.BaseResp) bool {
 	}
 	return true
 }
-func (p *RegisterResponse) Field2DeepEqual(src *int64) bool {
+func (p *RegisterResponse) Field2DeepEqual(src *string) bool {
 
 	if p.UserId == src {
 		return true
 	} else if p.UserId == nil || src == nil {
 		return false
 	}
-	if *p.UserId != *src {
+	if strings.Compare(*p.UserId, *src) != 0 {
 		return false
 	}
 	return true
@@ -207,9 +207,8 @@ var fieldIDToName_RegisterResponse = map[int16]string{
 }
 
 type LoginRequest struct {
-	Username string  `thrift:"username,1,required" frugal:"1,required,string" json:"username"`
-	Password string  `thrift:"password,2,required" frugal:"2,required,string" json:"password"`
-	Captcha  *string `thrift:"captcha,3,optional" frugal:"3,optional,string" json:"captcha,omitempty"`
+	Id       string `thrift:"Id,1,required" frugal:"1,required,string" json:"Id"`
+	Password string `thrift:"password,2,required" frugal:"2,required,string" json:"password"`
 }
 
 func NewLoginRequest() *LoginRequest {
@@ -219,34 +218,18 @@ func NewLoginRequest() *LoginRequest {
 func (p *LoginRequest) InitDefault() {
 }
 
-func (p *LoginRequest) GetUsername() (v string) {
-	return p.Username
+func (p *LoginRequest) GetId() (v string) {
+	return p.Id
 }
 
 func (p *LoginRequest) GetPassword() (v string) {
 	return p.Password
 }
-
-var LoginRequest_Captcha_DEFAULT string
-
-func (p *LoginRequest) GetCaptcha() (v string) {
-	if !p.IsSetCaptcha() {
-		return LoginRequest_Captcha_DEFAULT
-	}
-	return *p.Captcha
-}
-func (p *LoginRequest) SetUsername(val string) {
-	p.Username = val
+func (p *LoginRequest) SetId(val string) {
+	p.Id = val
 }
 func (p *LoginRequest) SetPassword(val string) {
 	p.Password = val
-}
-func (p *LoginRequest) SetCaptcha(val *string) {
-	p.Captcha = val
-}
-
-func (p *LoginRequest) IsSetCaptcha() bool {
-	return p.Captcha != nil
 }
 
 func (p *LoginRequest) String() string {
@@ -262,13 +245,10 @@ func (p *LoginRequest) DeepEqual(ano *LoginRequest) bool {
 	} else if p == nil || ano == nil {
 		return false
 	}
-	if !p.Field1DeepEqual(ano.Username) {
+	if !p.Field1DeepEqual(ano.Id) {
 		return false
 	}
 	if !p.Field2DeepEqual(ano.Password) {
-		return false
-	}
-	if !p.Field3DeepEqual(ano.Captcha) {
 		return false
 	}
 	return true
@@ -276,7 +256,7 @@ func (p *LoginRequest) DeepEqual(ano *LoginRequest) bool {
 
 func (p *LoginRequest) Field1DeepEqual(src string) bool {
 
-	if strings.Compare(p.Username, src) != 0 {
+	if strings.Compare(p.Id, src) != 0 {
 		return false
 	}
 	return true
@@ -288,23 +268,10 @@ func (p *LoginRequest) Field2DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *LoginRequest) Field3DeepEqual(src *string) bool {
-
-	if p.Captcha == src {
-		return true
-	} else if p.Captcha == nil || src == nil {
-		return false
-	}
-	if strings.Compare(*p.Captcha, *src) != 0 {
-		return false
-	}
-	return true
-}
 
 var fieldIDToName_LoginRequest = map[int16]string{
-	1: "username",
+	1: "Id",
 	2: "password",
-	3: "captcha",
 }
 
 type LoginResponse struct {
@@ -480,7 +447,7 @@ var fieldIDToName_LogoutResp = map[int16]string{
 }
 
 type QueryUserInfoRequest struct {
-	UserId int64 `thrift:"UserId,1,required" frugal:"1,required,i64" json:"UserId"`
+	UserId string `thrift:"UserId,1,required" frugal:"1,required,string" json:"UserId"`
 }
 
 func NewQueryUserInfoRequest() *QueryUserInfoRequest {
@@ -490,10 +457,10 @@ func NewQueryUserInfoRequest() *QueryUserInfoRequest {
 func (p *QueryUserInfoRequest) InitDefault() {
 }
 
-func (p *QueryUserInfoRequest) GetUserId() (v int64) {
+func (p *QueryUserInfoRequest) GetUserId() (v string) {
 	return p.UserId
 }
-func (p *QueryUserInfoRequest) SetUserId(val int64) {
+func (p *QueryUserInfoRequest) SetUserId(val string) {
 	p.UserId = val
 }
 
@@ -516,9 +483,9 @@ func (p *QueryUserInfoRequest) DeepEqual(ano *QueryUserInfoRequest) bool {
 	return true
 }
 
-func (p *QueryUserInfoRequest) Field1DeepEqual(src int64) bool {
+func (p *QueryUserInfoRequest) Field1DeepEqual(src string) bool {
 
-	if p.UserId != src {
+	if strings.Compare(p.UserId, src) != 0 {
 		return false
 	}
 	return true
@@ -617,7 +584,7 @@ var fieldIDToName_QueryUserInfoResponse = map[int16]string{
 type VerifyEmailRequest struct {
 	Email string `thrift:"email,1,required" frugal:"1,required,string" json:"email"`
 	Code  string `thrift:"code,2,required" frugal:"2,required,string" json:"code"`
-	Id    int64  `thrift:"id,3,required" frugal:"3,required,i64" json:"id"`
+	Id    string `thrift:"id,3,required" frugal:"3,required,string" json:"id"`
 }
 
 func NewVerifyEmailRequest() *VerifyEmailRequest {
@@ -635,7 +602,7 @@ func (p *VerifyEmailRequest) GetCode() (v string) {
 	return p.Code
 }
 
-func (p *VerifyEmailRequest) GetId() (v int64) {
+func (p *VerifyEmailRequest) GetId() (v string) {
 	return p.Id
 }
 func (p *VerifyEmailRequest) SetEmail(val string) {
@@ -644,7 +611,7 @@ func (p *VerifyEmailRequest) SetEmail(val string) {
 func (p *VerifyEmailRequest) SetCode(val string) {
 	p.Code = val
 }
-func (p *VerifyEmailRequest) SetId(val int64) {
+func (p *VerifyEmailRequest) SetId(val string) {
 	p.Id = val
 }
 
@@ -687,9 +654,9 @@ func (p *VerifyEmailRequest) Field2DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *VerifyEmailRequest) Field3DeepEqual(src int64) bool {
+func (p *VerifyEmailRequest) Field3DeepEqual(src string) bool {
 
-	if p.Id != src {
+	if strings.Compare(p.Id, src) != 0 {
 		return false
 	}
 	return true
@@ -763,7 +730,7 @@ type UpdateUserInfoRequest struct {
 	College *string `thrift:"college,1,optional" frugal:"1,optional,string" json:"college,omitempty"`
 	Grade   *string `thrift:"grade,2,optional" frugal:"2,optional,string" json:"grade,omitempty"`
 	Major   *string `thrift:"major,3,optional" frugal:"3,optional,string" json:"major,omitempty"`
-	Id      int64   `thrift:"id,4,required" frugal:"4,required,i64" json:"id"`
+	Id      string  `thrift:"id,4,required" frugal:"4,required,string" json:"id"`
 }
 
 func NewUpdateUserInfoRequest() *UpdateUserInfoRequest {
@@ -800,7 +767,7 @@ func (p *UpdateUserInfoRequest) GetMajor() (v string) {
 	return *p.Major
 }
 
-func (p *UpdateUserInfoRequest) GetId() (v int64) {
+func (p *UpdateUserInfoRequest) GetId() (v string) {
 	return p.Id
 }
 func (p *UpdateUserInfoRequest) SetCollege(val *string) {
@@ -812,7 +779,7 @@ func (p *UpdateUserInfoRequest) SetGrade(val *string) {
 func (p *UpdateUserInfoRequest) SetMajor(val *string) {
 	p.Major = val
 }
-func (p *UpdateUserInfoRequest) SetId(val int64) {
+func (p *UpdateUserInfoRequest) SetId(val string) {
 	p.Id = val
 }
 
@@ -892,9 +859,9 @@ func (p *UpdateUserInfoRequest) Field3DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdateUserInfoRequest) Field4DeepEqual(src int64) bool {
+func (p *UpdateUserInfoRequest) Field4DeepEqual(src string) bool {
 
-	if p.Id != src {
+	if strings.Compare(p.Id, src) != 0 {
 		return false
 	}
 	return true

@@ -6,18 +6,17 @@ struct RegisterRequest {
     1: required string username,
     2: required string password,
     3: required string email,
-    4: required i64 Id,
+    4: required string Id,
 }
 struct RegisterResponse {
     1: required model.BaseResp base,
-    2: required i64 UserId,
+    2: required string UserId,
 }
 
 // login
 struct LoginRequest{
-    1: required string username,
+    1: required string Id,
     2: required string password,
-    3: optional string captcha,
 }
 struct LoginResponse{
     1: required model.UserInfo data,
@@ -32,7 +31,7 @@ struct LogoutResp {
 }
 // QueryUserInfo
 struct QueryUserInfoRequest {
-    1 :required i64 UserId,
+    1 :required string UserId,
 }
 
 struct QueryUserInfoResponse {
@@ -47,8 +46,8 @@ struct UpdateUserInfoRequest{
     3: optional string major,
 }
 struct UpdateUserInfoResponse{
-    1: required model.UserInfo data,
-    2: required model.BaseResp base,
+    1: required model.BaseResp base,
+    2: required model.UserInfo data,
 }
 
 // VerifyEmail

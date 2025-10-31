@@ -6,8 +6,8 @@ import (
 )
 
 type User struct {
-	UserId    int64
-	RoleId    int64 //实际上是我们业务过程中区分用户的主键
+	UserId    string
+	RoleId    string //实际上是我们业务过程中区分用户的主键
 	UserName  string
 	UserRole  string
 	College   string

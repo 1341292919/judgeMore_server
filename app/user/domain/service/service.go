@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-func (svc *UserService) CreateUser(ctx context.Context, user *model.User) (int64, error) {
+func (svc *UserService) CreateUser(ctx context.Context, user *model.User) (string, error) {
 	return svc.db.CreateUser(ctx, user)
 }
 
@@ -29,7 +29,6 @@ func (svc *UserService) SendEmail(ctx context.Context, user *model.User) error {
 	}
 	// 发送邮箱
 	err = utils.MailSendCode(user.Email, code)
-	hlog.Info("jhh")
 	if err != nil {
 		return err
 	}
@@ -48,7 +47,7 @@ func (svc *UserService) UpdateUser(ctx context.Context, user *model.User) (*mode
 	if user.Grade != "" {
 		updateParams = append(updateParams, user.Grade)
 	}
-
+	hlog.Info(updateParams)
 	// 如果有需要更新的字段才执行
 	if len(updateParams) > 0 {
 		return svc.db.UpdateInfoByRoleId(ctx, user.Uid, updateParams...)
@@ -65,6 +64,9 @@ func (svc *UserService) VerifyEmail(ctx context.Context, data *model.EmailAuth) 
 	if !exist {
 		return errors.New("code expired")
 	}
+	emailParts := strings.Split(data.Email, "@")
+	localPart := emailParts[0]
+	data.Uid = localPart
 	code, err := svc.ca.GetCodeCache(ctx, key)
 	if err != nil {
 		return err

@@ -5,6 +5,14 @@ mysql:
   password: judgeMore
   charset: utf8mb4
 
+smtp:
+  host:
+  port:
+  user:
+  password:
+  from:
+  from_name:
+
 etcd:
   addr: 127.0.0.1:2379
 

@@ -4,16 +4,14 @@ package user
 
 import (
 	"context"
+	"github.com/cloudwego/hertz/pkg/app"
 	api "judgeMore_server/app/gateway/model/api/user"
+	"judgeMore_server/app/gateway/mw/jwt"
 	"judgeMore_server/app/gateway/pack"
 	"judgeMore_server/app/gateway/rpc"
 	"judgeMore_server/app/gateway/service"
 	"judgeMore_server/kitex_gen/user"
-	"judgeMore_server/pkg/constants"
 	"judgeMore_server/pkg/errno"
-	"judgeMore_server/pkg/utils"
-
-	"github.com/cloudwego/hertz/pkg/app"
 )
 
 // Register .
@@ -52,25 +50,23 @@ func Login(ctx context.Context, c *app.RequestContext) {
 		pack.SendFailResponse(c, errno.NewErrNo(errno.ParamMissingErrorCode, "param missing:"+err.Error()))
 		return
 	}
-
 	resp, err := rpc.LoginRPC(ctx, &user.LoginRequest{
-		Username: req.Username,
+		Id:       req.Id,
 		Password: req.Password,
 	})
 	if err != nil {
 		pack.SendFailResponse(c, errno.ConvertErr(err))
 		return
 	}
-	accessToken, refreshToken, err := utils.CreateAllToken(resp.Data.UserId)
-
 	if err != nil {
 		pack.SendFailResponse(c, errno.ConvertErr(err))
 		return
 	}
+	jwt.AccessTokenJwtMiddleware.LoginHandler(ctx, c)
+	jwt.RefreshTokenJwtMiddleware.LoginHandler(ctx, c)
 
-	c.Header(constants.AccessTokenHeader, accessToken)
-	c.Header(constants.RefreshTokenHeader, refreshToken)
-
+	c.Header("Access-Token", c.GetString("Access-Token"))
+	c.Header("Refresh-Token", c.GetString("Refresh-Token"))
 	resp.Base = pack.BuildBaseResp(errno.Success)
 	pack.SendResponse(c, resp)
 }
@@ -129,9 +125,9 @@ func UpdateUserInfo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	var resp api.UpdateUserInfoResponse
+	var resp *api.UpdateUserInfoResponse
 	userId := service.GetUserIDFromContext(c)
-	err = rpc.UpdateUserInfoRpc(ctx, &user.UpdateUserInfoRequest{
+	resp, err = rpc.UpdateUserInfoRpc(ctx, &user.UpdateUserInfoRequest{
 		College: req.College,
 		Major:   req.Major,
 		Grade:   req.Grade,
@@ -157,11 +153,9 @@ func VerifyEmail(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(api.VerifyEmailResponse)
-	userId := service.GetUserIDFromContext(c)
 	err = rpc.VerifyEmailRpc(ctx, &user.VerifyEmailRequest{
 		Email: req.Email,
 		Code:  req.Code,
-		Id:    userId,
 	})
 	if err != nil {
 		pack.SendFailResponse(c, errno.ConvertErr(err))

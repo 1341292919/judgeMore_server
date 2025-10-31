@@ -3,10 +3,12 @@ package cache
 import (
 	"context"
 	"fmt"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/redis/go-redis/v9"
 	"judgeMore_server/app/user/domain/repository"
 	"judgeMore_server/pkg/errno"
 	"math/rand"
+	"strings"
 	"time"
 )
 
@@ -29,11 +31,14 @@ func (c *UserCache) GetCodeCache(ctx context.Context, key string) (code string, 
 	if err != nil {
 		return "", errno.NewErrNo(errno.InternalRedisErrorCode, "write code to cache error:"+err.Error())
 	}
-	var storedCode, timestampStr string
-	_, err = fmt.Sscanf(value, "%s_%s", &storedCode, &timestampStr)
-	if err != nil {
-		return "", fmt.Errorf("failed to parse code: %v", err)
+	var storedCode string
+	hlog.Info(value)
+	hlog.Info(value)
+	parts := strings.Split(value, "_")
+	if len(parts) != 2 {
+		return "", fmt.Errorf("invalid code format, expected 2 parts, got %d", len(parts))
 	}
+	storedCode = parts[0]
 	return storedCode, nil
 }
 func (c *UserCache) PutCodeToCache(ctx context.Context, key string) (code string, err error) {

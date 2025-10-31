@@ -60,7 +60,7 @@ func AccessTokenJwt() {
 			if err := c.BindAndValidate(&loginStruct); err != nil {
 				return nil, err
 			}
-			userResp, err := LoginCheck(ctx, loginStruct.Username, loginStruct.Password)
+			userResp, err := LoginCheck(ctx, loginStruct.Id, loginStruct.Password)
 			if err != nil {
 				return nil, err
 			}
@@ -71,8 +71,8 @@ func AccessTokenJwt() {
 		log.Fatal("JWT Error:" + err.Error())
 	}
 }
-func LoginCheck(ctx context.Context, username, password string) (*user.LoginResponse, error) {
-	userResp, err := rpc.LoginRPC(ctx, &rpcModel.LoginRequest{Username: username, Password: password})
+func LoginCheck(ctx context.Context, id, password string) (*user.LoginResponse, error) {
+	userResp, err := rpc.LoginRPC(ctx, &rpcModel.LoginRequest{Id: id, Password: password})
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +123,7 @@ func RefreshTokenJwt() {
 			if err := c.BindAndValidate(&loginStruct); err != nil {
 				return nil, err
 			}
-			userResp, err := LoginCheck(ctx, loginStruct.Username, loginStruct.Password)
+			userResp, err := LoginCheck(ctx, loginStruct.Id, loginStruct.Password)
 			if err != nil {
 				return nil, err
 			}

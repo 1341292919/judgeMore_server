@@ -1,7 +1,7 @@
 package model
 
 type User struct {
-	Uid      int64
+	Uid      string
 	UserName string
 	Email    string
 	Password string
@@ -10,10 +10,13 @@ type User struct {
 	Grade    string
 	Status   int
 	Role     string
+	CreateAT int64
+	UpdateAT int64
+	DeleteAT int64
 }
 type EmailAuth struct {
 	Code  string
 	Email string
-	Uid   int64
+	Uid   string
 	Time  int64 //时间戳
 }

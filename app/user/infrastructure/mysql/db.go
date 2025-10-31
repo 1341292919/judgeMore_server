@@ -33,12 +33,13 @@ func (db *userDB) IsUserExist(ctx context.Context, user *model.User) (bool, erro
 	}
 	return true, nil
 }
-func (db *userDB) CreateUser(ctx context.Context, user *model.User) (int64, error) {
+func (db *userDB) CreateUser(ctx context.Context, user *model.User) (string, error) {
 	userInfo := &User{
 		UserName: user.UserName,
 		Password: user.Password,
 		Email:    user.Email,
 		RoleId:   user.Uid,
+		UserRole: "student",
 		Status:   0, //初始状态未激活
 	}
 	err := db.client.WithContext(ctx).
@@ -46,13 +47,13 @@ func (db *userDB) CreateUser(ctx context.Context, user *model.User) (int64, erro
 		Create(userInfo).
 		Error
 	if err != nil {
-		return 0, err
+		return "", err
 	}
 	return userInfo.RoleId, nil
 }
 
 // 该函数调用前检验存在性
-func (db *userDB) GetUserInfoByRoleId(ctx context.Context, role_id int64) (*model.User, error) {
+func (db *userDB) GetUserInfoByRoleId(ctx context.Context, role_id string) (*model.User, error) {
 	var userInfo *User
 	_ = db.client.WithContext(ctx).
 		Table(constants.TableUser).
@@ -65,12 +66,17 @@ func (db *userDB) GetUserInfoByRoleId(ctx context.Context, role_id int64) (*mode
 		Grade:    userInfo.Grade,
 		Major:    userInfo.Major,
 		College:  userInfo.College,
+		Password: userInfo.Password,
 		Status:   userInfo.Status,
+		Email:    userInfo.Email,
 		Role:     userInfo.UserRole,
+		UpdateAT: userInfo.UpdatedAt.Unix(),
+		CreateAT: userInfo.CreatedAt.Unix(),
+		DeleteAT: 0,
 	}, nil
 }
 
-func (db *userDB) UpdateInfoByRoleId(ctx context.Context, role_id int64, element ...string) (*model.User, error) {
+func (db *userDB) UpdateInfoByRoleId(ctx context.Context, role_id string, element ...string) (*model.User, error) {
 	updateFields := make(map[string]interface{})
 	for i, value := range element {
 		if value == "" {
@@ -97,10 +103,10 @@ func (db *userDB) UpdateInfoByRoleId(ctx context.Context, role_id int64, element
 	return db.GetUserInfoByRoleId(ctx, role_id)
 }
 
-func (db *userDB) ActivateUser(ctx context.Context, uid int64) error {
+func (db *userDB) ActivateUser(ctx context.Context, uid string) error {
 	err := db.client.WithContext(ctx).
 		Table(constants.TableUser).
-		Where("uid = ?", uid).
+		Where("role_id = ?", uid).
 		Update("status", 1).
 		Error
 	if err != nil {

@@ -7,10 +7,10 @@ import (
 
 type UserDB interface {
 	IsUserExist(ctx context.Context, user *model.User) (bool, error)
-	CreateUser(ctx context.Context, user *model.User) (int64, error)
-	GetUserInfoByRoleId(ctx context.Context, role_id int64) (*model.User, error)
-	UpdateInfoByRoleId(ctx context.Context, role_id int64, element ...string) (*model.User, error)
-	ActivateUser(ctx context.Context, uid int64) error
+	CreateUser(ctx context.Context, user *model.User) (string, error)
+	GetUserInfoByRoleId(ctx context.Context, role_id string) (*model.User, error)
+	UpdateInfoByRoleId(ctx context.Context, role_id string, element ...string) (*model.User, error)
+	ActivateUser(ctx context.Context, uid string) error
 }
 type UserCache interface {
 	GetCodeCache(ctx context.Context, key string) (code string, err error)

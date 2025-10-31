@@ -32,6 +32,7 @@ func RegisterRPC(ctx context.Context, req *user.RegisterRequest) (apiResp *api.R
 	return apiResp, nil
 }
 func LoginRPC(ctx context.Context, req *user.LoginRequest) (apiResp *api.LoginResponse, err error) {
+	apiResp = new(api.LoginResponse)
 	resp, err := userClient.Login(ctx, req)
 	if err != nil {
 		logger.Errorf("LoginRPC: RPC called failed: %v", err.Error())
@@ -66,16 +67,18 @@ func QueryUserInfoRpc(ctx context.Context, req *user.QueryUserInfoRequest) (apiR
 	apiResp.Data = pack.UserInfo(resp.Data)
 	return apiResp, nil
 }
-func UpdateUserInfoRpc(ctx context.Context, req *user.UpdateUserInfoRequest) error {
+func UpdateUserInfoRpc(ctx context.Context, req *user.UpdateUserInfoRequest) (apiResp *api.UpdateUserInfoResponse, err error) {
+	apiResp = new(api.UpdateUserInfoResponse)
 	resp, err := userClient.UpdateUserInfo(ctx, req)
 	if err != nil {
 		logger.Errorf("QueryUserInfo: RPC called failed: %v", err.Error())
-		return errno.InternalServiceError.WithError(err)
+		return nil, errno.InternalServiceError.WithError(err)
 	}
 	if !utils.IsSuccess(resp.Base) {
-		return errno.InternalServiceError.WithMessage(resp.Base.Msg)
+		return nil, errno.InternalServiceError.WithMessage(resp.Base.Msg)
 	}
-	return nil
+	apiResp.Data = pack.UserInfo(resp.Data)
+	return apiResp, nil
 }
 func VerifyEmailRpc(ctx context.Context, req *user.VerifyEmailRequest) error {
 	resp, err := userClient.VerifyEmail(ctx, req)

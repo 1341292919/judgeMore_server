@@ -4,16 +4,24 @@ import (
 	"fmt"
 	"github.com/cloudwego/hertz/pkg/app"
 	"judgeMore_server/pkg/constants"
-	"judgeMore_server/pkg/errno"
 )
 
-func GetUserIDFromContext(c *app.RequestContext) int64 {
-	data := c.Keys[constants.ContextUserId]
-	uid, err := convertToInt64(data)
-	if err != nil {
-		panic(errno.UserIdMissingError)
+func GetUserIDFromContext(c *app.RequestContext) string {
+	if c == nil || c.Keys == nil {
+		return ""
 	}
-	return uid
+
+	data, exists := c.Keys[constants.ContextUserId]
+	if !exists {
+		return ""
+	}
+
+	// 类型断言确保返回的是 string
+	if userID, ok := data.(string); ok {
+		return userID
+	}
+
+	return ""
 }
 func convertToInt64(value interface{}) (int64, error) {
 	switch v := value.(type) {

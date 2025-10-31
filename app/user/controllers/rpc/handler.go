@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"context"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"judgeMore_server/app/user/domain/model"
 	"judgeMore_server/app/user/pack"
 	"judgeMore_server/app/user/usecase"
@@ -25,7 +26,7 @@ func (h *UserHandler) Register(ctx context.Context, req *user.RegisterRequest) (
 		Password: req.Password,
 		Email:    req.Email,
 	}
-	var uid int64
+	var uid string
 	if uid, err = h.useCase.RegisterUser(ctx, u); err != nil {
 		r.Base = pack.BuildBaseResp(errno.ConvertErr(err))
 		return
@@ -38,9 +39,10 @@ func (h *UserHandler) Register(ctx context.Context, req *user.RegisterRequest) (
 func (h *UserHandler) Login(ctx context.Context, req *user.LoginRequest) (r *user.LoginResponse, err error) {
 	r = new(user.LoginResponse)
 	u := &model.User{
-		UserName: req.Username,
+		Uid:      req.Id,
 		Password: req.Password,
 	}
+	hlog.Info(u)
 	userInfo, err := h.useCase.Login(ctx, u)
 	if err != nil {
 		r.Base = pack.BuildBaseResp(errno.ConvertErr(err))
@@ -48,6 +50,7 @@ func (h *UserHandler) Login(ctx context.Context, req *user.LoginRequest) (r *use
 	}
 	r.Data = pack.User(userInfo)
 	r.Base = pack.BuildBaseResp(errno.Success)
+	hlog.Info(r)
 	return
 }
 
@@ -75,7 +78,6 @@ func (h *UserHandler) VerifyEmail(ctx context.Context, req *user.VerifyEmailRequ
 	u := &model.EmailAuth{
 		Email: req.Email,
 		Code:  req.Code,
-		Uid:   req.Id,
 	}
 	err = h.useCase.VerifyEmail(ctx, u)
 	if err != nil {
@@ -92,10 +94,10 @@ func (h *UserHandler) UpdateUserInfo(ctx context.Context, req *user.UpdateUserIn
 	if req.Grade != nil {
 		u.Grade = *req.Grade
 	}
-	if req.Major == nil {
+	if req.Major != nil {
 		u.Major = *req.Major
 	}
-	if req.College == nil {
+	if req.College != nil {
 		u.College = *req.College
 	}
 	u.Uid = req.Id

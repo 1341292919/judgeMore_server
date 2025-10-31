@@ -9,7 +9,7 @@ import (
 
 // UserUseCase 接口应该不应该定义在 domain 中，这属于 use case 层
 type UserUseCase interface {
-	RegisterUser(ctx context.Context, user *model.User) (uid int64, err error)
+	RegisterUser(ctx context.Context, user *model.User) (uid string, err error)
 	Login(ctx context.Context, user *model.User) (userInfo *model.User, err error)
 	QueryUserInfo(ctx context.Context, user *model.User) (userInfo *model.User, err error)
 	UpdateUserInfo(ctx context.Context, user *model.User) (userInfo *model.User, err error)
