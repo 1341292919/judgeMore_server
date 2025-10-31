@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"judgeMore_server/app/user/domain/model"
 	"judgeMore_server/pkg/constants"
 	"judgeMore_server/pkg/errno"
 	"judgeMore_server/pkg/utils"
-	"strconv"
+	"strings"
 )
 
 func (svc *UserService) CreateUser(ctx context.Context, user *model.User) (int64, error) {
@@ -17,7 +18,7 @@ func (svc *UserService) CreateUser(ctx context.Context, user *model.User) (int64
 
 func (svc *UserService) SendEmail(ctx context.Context, user *model.User) error {
 	// 首先进行验证 学号即Uid 与fzu邮箱强绑定
-	Correct := user.Email == strconv.FormatInt(user.Uid, 10)+constants.EmailSuffix
+	Correct := strings.HasSuffix(user.Email, constants.EmailSuffix) && len(user.Email) == constants.EmailLength
 	if !Correct {
 		return errno.NewErrNo(errno.ServiceEmailIncorrectCode, "Uid do not match email")
 	}
@@ -28,6 +29,7 @@ func (svc *UserService) SendEmail(ctx context.Context, user *model.User) error {
 	}
 	// 发送邮箱
 	err = utils.MailSendCode(user.Email, code)
+	hlog.Info("jhh")
 	if err != nil {
 		return err
 	}

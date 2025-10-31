@@ -31,6 +31,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 		Username: req.Username,
 		Password: req.Password,
 		Email:    req.Email,
+		Id:       req.Id,
 	})
 
 	if err != nil {

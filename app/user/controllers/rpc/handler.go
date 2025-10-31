@@ -20,6 +20,7 @@ func NewUserHandler(useCase usecase.UserUseCase) *UserHandler {
 func (h *UserHandler) Register(ctx context.Context, req *user.RegisterRequest) (r *user.RegisterResponse, err error) {
 	r = new(user.RegisterResponse)
 	u := &model.User{
+		Uid:      req.Id,
 		UserName: req.Username,
 		Password: req.Password,
 		Email:    req.Email,

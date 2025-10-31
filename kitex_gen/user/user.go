@@ -13,6 +13,7 @@ type RegisterRequest struct {
 	Username string `thrift:"username,1,required" frugal:"1,required,string" json:"username"`
 	Password string `thrift:"password,2,required" frugal:"2,required,string" json:"password"`
 	Email    string `thrift:"email,3,required" frugal:"3,required,string" json:"email"`
+	Id       int64  `thrift:"Id,4,required" frugal:"4,required,i64" json:"Id"`
 }
 
 func NewRegisterRequest() *RegisterRequest {
@@ -33,6 +34,10 @@ func (p *RegisterRequest) GetPassword() (v string) {
 func (p *RegisterRequest) GetEmail() (v string) {
 	return p.Email
 }
+
+func (p *RegisterRequest) GetId() (v int64) {
+	return p.Id
+}
 func (p *RegisterRequest) SetUsername(val string) {
 	p.Username = val
 }
@@ -41,6 +46,9 @@ func (p *RegisterRequest) SetPassword(val string) {
 }
 func (p *RegisterRequest) SetEmail(val string) {
 	p.Email = val
+}
+func (p *RegisterRequest) SetId(val int64) {
+	p.Id = val
 }
 
 func (p *RegisterRequest) String() string {
@@ -63,6 +71,9 @@ func (p *RegisterRequest) DeepEqual(ano *RegisterRequest) bool {
 		return false
 	}
 	if !p.Field3DeepEqual(ano.Email) {
+		return false
+	}
+	if !p.Field4DeepEqual(ano.Id) {
 		return false
 	}
 	return true
@@ -89,11 +100,19 @@ func (p *RegisterRequest) Field3DeepEqual(src string) bool {
 	}
 	return true
 }
+func (p *RegisterRequest) Field4DeepEqual(src int64) bool {
+
+	if p.Id != src {
+		return false
+	}
+	return true
+}
 
 var fieldIDToName_RegisterRequest = map[int16]string{
 	1: "username",
 	2: "password",
 	3: "email",
+	4: "Id",
 }
 
 type RegisterResponse struct {

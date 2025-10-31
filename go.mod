@@ -12,6 +12,7 @@ require (
 	github.com/cloudwego/kitex v0.15.2
 	github.com/fsnotify/fsnotify v1.9.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/hertz-contrib/jwt v1.0.4
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/kitex-contrib/obs-opentelemetry v0.2.9
 	github.com/kitex-contrib/registry-etcd v0.3.0
@@ -74,7 +75,6 @@ require (
 	github.com/hashicorp/go-rootcerts v1.0.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hashicorp/serf v0.10.1 // indirect
-	github.com/hertz-contrib/jwt v1.0.4 // indirect
 	github.com/iancoleman/strcase v0.2.0 // indirect
 	github.com/jhump/protoreflect v1.8.2 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect

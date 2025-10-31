@@ -30,3 +30,16 @@ kitex-gen-%:
 .PHONY: hz-%
 hz-%:
 	hz update -idl ${IDL_PATH}/api/$*.thrift
+
+# 清除所有的构建产物
+.PHONY: clean
+clean:
+	@find . -type d -name "output" -exec rm -rf {} + -print
+
+# 清除所有构建产物、compose 环境和它的数据
+.PHONY: clean-all
+clean-all: clean
+	@echo "$(PREFIX) Checking if docker-compose services are running..."
+	@docker-compose -f ./docker/docker-compose.yml ps -q | grep '.' && docker-compose -f ./docker/docker-compose.yml down || echo "$(PREFIX) No services are running."
+	@echo "$(PREFIX) Removing docker data..."
+	rm -rf ./docker/data

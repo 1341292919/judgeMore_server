@@ -3,6 +3,7 @@ package utils
 import (
 	"crypto/tls"
 	"fmt"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"judgeMore_server/config"
 	"judgeMore_server/pkg/errno"
 	"net/smtp"
@@ -45,10 +46,12 @@ func MailSendCode(to string, code string) error {
 	tlsCfg := &tls.Config{ServerName: host}
 	if err := e.SendWithTLS(addr, auth, tlsCfg); err == nil {
 		return nil
+	} else {
+		hlog.Info(err.Error())
 	}
 
-	if err := e.Send(addr, auth); err == nil {
-		return nil
+	if err := e.Send(addr, auth); err != nil {
+		return errno.NewErrNo(errno.InternalServiceErrorCode, "MailSendCode: 无法发送邮件，请检查 SMTP 配置"+err.Error())
 	}
-	return errno.NewErrNo(errno.InternalServiceErrorCode, "MailSendCode: 无法发送邮件，请检查 SMTP 配置")
+	return nil
 }

@@ -1,5 +1,5 @@
 package constants
 
 const (
-	TableUser = "user"
+	TableUser = "users"
 )

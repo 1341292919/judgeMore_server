@@ -25,13 +25,13 @@ func (db *userDB) IsUserExist(ctx context.Context, user *model.User) (bool, erro
 		Where("role_id = ?", user.Uid).
 		First(&userInfo).
 		Error
-	if errors.Is(err, gorm.ErrRecordNotFound) { //找到了说明用户存在
-		return true, nil
-	}
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) { //没找到了说明用户不存在
+			return false, nil
+		}
 		return false, errno.Errorf(errno.InternalDatabaseErrorCode, "mysql: failed to query user: %v", err)
 	}
-	return false, nil
+	return true, nil
 }
 func (db *userDB) CreateUser(ctx context.Context, user *model.User) (int64, error) {
 	userInfo := &User{

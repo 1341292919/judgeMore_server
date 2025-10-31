@@ -21,14 +21,15 @@ func (uc *useCase) RegisterUser(ctx context.Context, u *model.User) (uid int64, 
 	if err != nil {
 		return 0, fmt.Errorf("hash password failed: %w", err)
 	}
-	uid, err = uc.svc.CreateUser(ctx, u)
-	if err != nil {
-		return 0, fmt.Errorf("create user failed: %w", err)
-	}
-	// 验证邮箱
+	//验证邮箱
 	err = uc.svc.SendEmail(ctx, u)
 	if err != nil {
 		return 0, fmt.Errorf("send email failed: %w", err)
+	}
+	// 创建账户
+	uid, err = uc.svc.CreateUser(ctx, u)
+	if err != nil {
+		return 0, fmt.Errorf("create user failed: %w", err)
 	}
 	return uid, nil
 }
